@@ -1,0 +1,58 @@
+<style>
+    table#problem * {
+        text-align: center;
+        white-space: nowrap;
+        vertical-align: middle;
+    }
+</style>
+<div class="columns">
+    <div class="column buttons" style="text-align: center;">
+        <a class="button is-danger" href="/create">Reset</a>
+        <button class="button is-light" onclick="problem.addDemand()">Add Demand</button>
+        <button class="button is-light" onclick="problem.addSupply()">Add Supply</button>
+        <button class="button is-primary" onclick="problem.calculateTotalUnits()">Calculate Total Units</button>
+        <button id="submit" class="button is-link" onclick="problem.submit()" disabled>Submit</button>
+    </div>
+</div>
+<div class="columns">
+    <div class="column" style="text-align: center; overflow-x: auto;">
+        <table id="problem" class="table is-bordered is-striped is-hoverable" style="display: inline-flex;">
+            <tbody>
+                <tr>
+                    <th style="visibility:hidden"></th>
+                    <th>
+                        <div class="select is-small">
+                            <select>
+                                <option value="">Pick demander</option>
+                                {{#each demanders}}
+                                <option value="{{this._id}}">{{this.name}}</option>
+                                {{/each}}
+                            </select>
+                        </div>
+                    </th>
+                    <th>Supply</th>
+                </tr>
+                <tr>
+                    <th>
+                        <div class="select is-small">
+                            <select>
+                                <option value="">Pick supplier</option>
+                                {{#each suppliers}}
+                                <option value="{{this._id}}">{{this.name}}</option>
+                                {{/each}}
+                            </select>
+                        </div>
+                    </th>
+                    <td><input onchange="problem.submitState(true,false)" onclick="this.select()" class="input" type="text" value="0"></td>
+                    <th><input onchange="problem.submitState(true,false)" onclick="this.select()" class="input" type="text" value="0"></th>
+                </tr>
+                <tr>
+                    <th>Demand</th>
+                    <th><input onchange="problem.submitState(true,false)" onclick="this.select()" class="input" type="text" value="0"></th>
+                    <th><input class="input" type="text" value="0" disabled></th>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<script src="/assets/js/create.js"></script>

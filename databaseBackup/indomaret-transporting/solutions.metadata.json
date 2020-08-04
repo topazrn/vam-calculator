@@ -1,0 +1,1 @@
+{"options":{},"indexes":[{"v":{"$numberInt":"2"},"key":{"_id":{"$numberInt":"1"}},"name":"_id_","ns":"indomaret-transporting.solutions"}],"uuid":"3f7087b66f264a2581bcf159045f7c0c"}
