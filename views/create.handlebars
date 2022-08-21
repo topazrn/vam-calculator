@@ -20,29 +20,11 @@
             <tbody>
                 <tr>
                     <th style="visibility:hidden"></th>
-                    <th>
-                        <div class="select is-small">
-                            <select>
-                                <option value="">Pick demander</option>
-                                {{#each demanders}}
-                                <option value="{{this._id}}">{{this.name}}</option>
-                                {{/each}}
-                            </select>
-                        </div>
-                    </th>
+                    <th>D<sub>1</sub></th>
                     <th>Supply</th>
                 </tr>
                 <tr>
-                    <th>
-                        <div class="select is-small">
-                            <select>
-                                <option value="">Pick supplier</option>
-                                {{#each suppliers}}
-                                <option value="{{this._id}}">{{this.name}}</option>
-                                {{/each}}
-                            </select>
-                        </div>
-                    </th>
+                    <th>S<sub>1</sub></th>
                     <td><input onchange="problem.submitState(true,false)" onclick="this.select()" class="input" type="text" value="0"></td>
                     <th><input onchange="problem.submitState(true,false)" onclick="this.select()" class="input" type="text" value="0"></th>
                 </tr>

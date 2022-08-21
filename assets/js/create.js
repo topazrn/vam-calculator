@@ -29,12 +29,16 @@ class Problem {
 
         // DOM
         let rows = this.element.querySelectorAll('tr');
-        rows.forEach(row => {
+        for (let index = 0; index < rows.length; index++) {
+            const row = rows[index];
             let columns = row.querySelectorAll('td, th');
             let firstColumn = columns[1].cloneNode(true);
             let lastColumn = columns[columns.length - 1];
-            row.insertBefore(firstColumn, lastColumn);
-        });
+            let newColumn = row.insertBefore(firstColumn, lastColumn);
+            if (index === 0) {
+                newColumn.querySelector("sub").innerText = this.demand.length;
+            }
+        }
 
         this.submitState(true, false);
     }
@@ -49,50 +53,12 @@ class Problem {
         let rows = this.element.querySelectorAll('tr');
         let firstRow = rows[1].cloneNode(true);
         let lastRow = rows[rows.length - 1];
-        this.element.querySelector('tbody').insertBefore(firstRow, lastRow);
+        let newRow = this.element.querySelector('tbody').insertBefore(firstRow, lastRow);
+        newRow.querySelector("sub").innerText = this.supply.length;
 
         this.submitState(true, false);
     }
     calculateTotalUnits() {
-        let select = document.querySelectorAll('select');
-
-        // test demander harus beda semua
-        let demanders = [];
-        for (let index = 0; index < this.demand.length; index++) {
-            const demander = select[index].value;
-            if (demander.trim() === "") {
-                new customAlert(this.status[4]);
-                this.submitState(true, false);
-                return false;
-            }
-            demanders.push(demander);
-        }
-        if (isThereADuplicate(demanders)) {
-            new customAlert(this.status[2]);
-            this.submitState(true, false);
-            return false;
-        }
-        this.demander = demanders;
-
-        // test suppliers harus beda semua
-        let suppliers = [];
-        for (let index = 0; index < this.supply.length; index++) {
-            const supplier = select[index + this.demand.length].value;
-            if (supplier.trim() === "") {
-                new customAlert(this.status[4]);
-                this.submitState(true, false);
-                return false;
-            }
-            suppliers.push(supplier);
-        }
-        if (isThereADuplicate(suppliers)) {
-            new customAlert(this.status[3]);
-            this.submitState(true, false);
-            return false;
-        }
-        this.supplier = suppliers;
-
-
         // update object values from DOM values
         let rows = this.element.querySelectorAll('tr');
         for (let y = 1; y < rows.length; y++) {
@@ -154,21 +120,11 @@ class Problem {
         }
     }
     submit() {
-        let supply = [];
-        for (let index = 0; index < this.supply.length; index++) {
-            supply.push({supplierId: this.supplier[index], unit: this.supply[index]});
-        }
-
-        let demand = [];
-        for (let index = 0; index < this.demand.length; index++) {
-            demand.push({demanderId: this.demander[index], unit: this.demand[index]});
-        }
-
         this.submitState(true, true);
         let request = new XMLHttpRequest();
         let data = {
-            supply: supply,
-            demand: demand,
+            supply: this.supply,
+            demand: this.demand,
             cost: this.cost,
             totalUnits: this.totalUnits
         }

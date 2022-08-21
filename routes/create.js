@@ -1,23 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const Problem = require('../models/problem');
-const Demander = require('../models/demander');
-const Supplier = require('../models/supplier');
 
 router.get('/', async (req, res) => {
-    let suppliers = await Supplier.find().exec().then(docs => {
-        return JSON.parse(JSON.stringify(docs));
-    }).catch(error => {
-        return error;
-    });
-
-    let demanders = await Demander.find().exec().then(docs => {
-        return JSON.parse(JSON.stringify(docs));
-    }).catch(error => {
-        return error;
-    });
-
-    res.render(`create`, {suppliers, demanders});
+    res.render(`create`);
 });
 
 router.post('/', (req, res) => {

@@ -41,7 +41,7 @@ class ProblemViewer {
     createHTML(){
         let totalUnit = 0;
         this.supply.forEach(sup => {
-            totalUnit += sup.unit;
+            totalUnit += sup;
         });
         let string = ``;
         string += `<tbody>`;
@@ -52,23 +52,23 @@ class ProblemViewer {
                     if (column === 0) {
                         string += `        <th style="visibility:hidden"></th>`;
                     } else if (column < this.demand.length + 1) {
-                        string += `        <th>${this.demand[column - 1].name}</th>`;
+                        string += `        <th>D<sub>${column}</sub></th>`;
                     } else if (column === this.demand.length + 1) {
                         string += `        <th>Supply</th>`;
                     }
                 } else if (row < this.supply.length + 1) {
                     if (column === 0) {
-                        string += `        <th>${this.supply[row - 1].name}</sub></th>`;
+                        string += `        <th>S<sub>${column}</sub>}</sub></th>`;
                     } else if (column < this.demand.length + 1) {
                         string += `        <td>${this.cost[column - 1][row - 1]}</td>`;
                     } else if (column === this.demand.length + 1) {
-                        string += `        <th>${this.supply[row - 1].unit}</th>`;
+                        string += `        <th>${this.supply[row - 1]}</th>`;
                     }
                 } else if (row === this.supply.length + 1) {
                     if (column === 0) {
                         string += `        <th>Demand</th>`;
                     } else if (column < this.demand.length + 1) {
-                        string += `        <th>${this.demand[column - 1].unit}</sub></th>`;
+                        string += `        <th>${this.demand[column - 1]}</sub></th>`;
                     } else if (column === this.demand.length + 1) {
                         string += `        <th>${totalUnit}</th>`;
                     }
@@ -180,7 +180,7 @@ class SolutionViewer {
                     if (column === 0) {
                         string += `            <th style="visibility:hidden"></th>`;
                     } else if (column < this.demand.length + 1) {
-                        string += `            <th>${this.demand[column - 1].name}</th>`;
+                        string += `            <th>D<sub>${column}</sub></th>`;
                     } else if (column === this.demand.length + 1) {
                         string += `            <th>Supply</th>`;
                     } else {
@@ -188,7 +188,7 @@ class SolutionViewer {
                     }
                 } else if (row < this.supply.length + 1) {
                     if (column === 0) {
-                        string += `            <th>${this.supply[row - 1].name}</th>`;
+                        string += `            <th>S<sub>${row}</sub></th>`;
                     } else if (column < this.demand.length + 1) {
                         string += `            <td>${this.cost[column - 1][row - 1]} / ${currentSolution.distribution[column - 1][row - 1]}</td>`;
                     } else if (column === this.demand.length + 1) {
@@ -208,7 +208,7 @@ class SolutionViewer {
                     }
                 } else {
                     if (column === 0) {
-                        string += `            <th>P<sub>${row - this.supply.length - 1}</th>`;
+                        string += `            <th>P<sub>${row - this.supply.length - 1}</sub></th>`;
                     } else if (column < this.demand.length + 1) {
                         string += `            <th>${currentSolution.penalty[row - this.supply.length - 2].demand[column - 1]}</th>`;
                     } else if (column === this.demand.length + 1) {

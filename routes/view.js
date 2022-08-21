@@ -3,8 +3,6 @@ const router = express.Router();
 const mongoose = require('mongoose');
 const Problem = require('../models/problem');
 const Solution = require('../models/solution');
-const Supplier = require('../models/supplier');
-const Demander = require('../models/demander');
 
 // View list of problems
 router.get('/', async (req, res) => {
@@ -24,7 +22,7 @@ router.get('/', async (req, res) => {
         let totalCost = 0;
 
         problem.supply.forEach(sup => {
-            totalUnits += sup.unit;
+            totalUnits += sup;
         });
 
         const solutions = await Solution.findById(problem._id).exec().then(doc => {
@@ -62,22 +60,6 @@ router.get('/problem/:problemId', async (req, res) => {
     }).catch(error => {
         return error;
     });
-    for (let index = 0; index < problem.supply.length; index++) {
-        let supplierName = await Supplier.findById(problem.supply[index].supplierId).exec().then(doc => {
-            return doc.name;
-        }).catch(error => {
-            return error;
-        });
-        problem.supply[index].name = supplierName;
-    }
-    for (let index = 0; index < problem.demand.length; index++) {
-        let demanderName = await Demander.findById(problem.demand[index].demanderId).exec().then(doc => {
-            return doc.name;
-        }).catch(error => {
-            return error;
-        });
-        problem.demand[index].name = demanderName;
-    }
     res.json(problem);
 });
 
@@ -279,12 +261,12 @@ router.post('/solution/:problemId', async (req, res) => {
 
     let supply = [];
     problem.supply.forEach(element => {
-        supply.push(element.unit);
+        supply.push(element);
     });   
 
     let demand = [];
     problem.demand.forEach(element => {
-        demand.push(element.unit);
+        demand.push(element);
     });
 
     let distribution = [];
@@ -331,22 +313,6 @@ router.get('/solution/:problemId', async (req, res) => {
     }).catch(error => {
         return error;
     });
-    for (let index = 0; index < problem.supply.length; index++) {
-        let supplierName = await Supplier.findById(problem.supply[index].supplierId).exec().then(doc => {
-            return doc.name;
-        }).catch(error => {
-            return error;
-        });
-        problem.supply[index].name = supplierName;
-    }
-    for (let index = 0; index < problem.demand.length; index++) {
-        let demanderName = await Demander.findById(problem.demand[index].demanderId).exec().then(doc => {
-            return doc.name;
-        }).catch(error => {
-            return error;
-        });
-        problem.demand[index].name = demanderName;
-    }
     let solutions = await Solution.findById(req.params.problemId).exec().then(doc => {
         return JSON.parse(JSON.stringify(doc.solution));
     }).catch(error => {
