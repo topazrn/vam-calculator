@@ -16,9 +16,6 @@ app.use((req, res, next) => {
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use('/assets', express.static('assets'));
-app.use('/login', require('./routes/login'));
-app.use('/register', require('./routes/register'));
-app.use(require('./middleware/auth'));
 app.use('/', require('./routes/dashboard'));
 app.use('/view', require('./routes/view'));
 app.use('/create', require('./routes/create'));

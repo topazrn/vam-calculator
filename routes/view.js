@@ -3,7 +3,6 @@ const router = express.Router();
 const mongoose = require('mongoose');
 const Problem = require('../models/problem');
 const Solution = require('../models/solution');
-const User = require('../models/user');
 const Supplier = require('../models/supplier');
 const Demander = require('../models/demander');
 
@@ -28,12 +27,6 @@ router.get('/', async (req, res) => {
             totalUnits += sup.unit;
         });
 
-        const user = await User.findById(problem.userId).exec().then(user => {
-            return user.name.first;
-        }).catch(error => {
-            return error;
-        });
-
         const solutions = await Solution.findById(problem._id).exec().then(doc => {
             return JSON.parse(JSON.stringify(doc.solution));
         }).catch(error => {
@@ -51,7 +44,6 @@ router.get('/', async (req, res) => {
 
         response.id = problem._id;
         response.date = date.toLocaleString('id-ID');
-        response.user = user;
         response.suppliers = problem.supply.length;
         response.demanders = problem.demand.length;
         response.totalUnits = totalUnits;

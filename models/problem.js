@@ -14,7 +14,6 @@ let problemSchema = new mongoose.Schema({
     supply: [supplySchema],
     demand: [demandSchema],
     cost: [[Number]],
-    userId: mongoose.Schema.Types.ObjectId,
     dateIn: { type: Date, default: Date.now }
 });
 

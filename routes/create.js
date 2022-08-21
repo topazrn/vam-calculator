@@ -1,6 +1,5 @@
 const express = require('express');
 const router = express.Router();
-const mongoose = require('mongoose');
 const Problem = require('../models/problem');
 const Demander = require('../models/demander');
 const Supplier = require('../models/supplier');
@@ -26,7 +25,6 @@ router.post('/', (req, res) => {
     problem.supply = req.body.supply;
     problem.demand = req.body.demand;
     problem.cost = req.body.cost;
-    problem.userId = mongoose.Types.ObjectId(req.session.userId);
     problem.save().then(result => {
         console.log(result);
         res.send('/create?statusId=0');
