@@ -4,4 +4,3 @@
     <br>
     <button class="button is-success" type="submit">Submit</button>
 </form>
-<script src="assets/js/issue.js"></script>
