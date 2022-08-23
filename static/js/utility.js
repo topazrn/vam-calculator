@@ -98,30 +98,3 @@ function indexOfMin(arr, indexToExclude = []) {
     // all arr is excluded
     return -2;
 }
-
-class customAlert {
-    constructor(message = ``) {
-        this.message = message;
-        if (message === ``) {
-            message += `<strong>John Smith</strong> <small>@johnsmith</small> <small>31m</small>`;
-            message += `<br>`;
-            message += `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean efficitur sit amet massa`;
-            message += `fringilla egestas. Nullam condimentum luctus turpis.`;
-        }
-        this.element = document.getElementById('customAlert');
-        this.element.querySelector('button').onclick = () => this.hide();
-        this.element.querySelector('.modal-background').onclick = () => this.hide();
-        this.setMessage(this.message);
-        this.show();
-    }
-    show() {
-        this.element.classList.add('is-active');
-    }
-    hide() {
-        this.element.classList.remove('is-active');
-        this.setMessage(``);
-    }
-    setMessage(message) {
-        this.element.querySelector('p').innerHTML = message;
-    }
-}
