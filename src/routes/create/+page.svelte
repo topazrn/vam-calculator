@@ -1,16 +1,6 @@
 <script lang="ts">
   import Alert from '$lib/Alert.svelte';
-
-  // prettier-ignore
-  const status = [
-    'All values must be a positive whole number',
-    'Demands and supplies total units must be equal',
-    'All demanders must be different',
-    'All suppliers must be different',
-    'Demanders and Suppliers must be picked',
-    'Problem has been successfully added',
-    'Error adding problem'
-  ];
+  import { DB } from '$lib/Database';
 
   let data = {
     supply: [0],
@@ -19,6 +9,7 @@
   };
   let totalUnits = 0;
   let alert = '';
+  $: submittable = !data
 
   function addDemand() {
     data.demand.push(0);
@@ -31,17 +22,15 @@
     data = data;
   }
   function calculateTotalUnits() {
-    // calculate total units
     let totalDemand = 0;
     data.demand.forEach((d) => (totalDemand += d));
     let totalSupply = 0;
     data.supply.forEach((s) => (totalSupply += s));
     if (totalDemand === totalSupply) {
       totalUnits = totalDemand;
-      return true;
+      submittable = true;
     } else {
-      alert = status[1];
-      return false;
+      alert = 'Demands and supplies total units must be equal';
     }
   }
   function reset() {
@@ -52,20 +41,16 @@
     };
     totalUnits = 0;
   }
-  function submitted() {
-    let request = new XMLHttpRequest();
-    let _data = {
-      supply: data.supply,
-      demand: data.demand,
-      cost: data.cost,
-      totalUnits: totalUnits
-    };
-    request.open('POST', '/create', true);
-    request.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
-    request.onload = function () {
-      window.location = request.response;
-    };
-    request.send(JSON.stringify(_data));
+  async function submit() {
+    try {
+      await DB.problems.add({
+        ...data,
+        dateIn: Date.now()
+      });
+      alert = 'Problem has been successfully added';
+    } catch (error) {
+      alert = 'Error adding problem';
+    }
   }
 </script>
 
@@ -75,7 +60,7 @@
     <button class="button is-light" on:click={() => addDemand()}>Add Demand</button>
     <button class="button is-light" on:click={() => addSupply()}>Add Supply</button>
     <button class="button is-primary" on:click={() => calculateTotalUnits()}>Calculate Total Units</button>
-    <button class="button is-link" on:click={() => submitted()} disabled>Submit</button>
+    <button class="button is-link" on:click={async () => await submit()} disabled={!submittable}>Submit</button>
   </div>
 </div>
 <div class="columns">
