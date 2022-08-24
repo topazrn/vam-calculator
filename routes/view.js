@@ -1,57 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
-const Problem = require('../models/problem');
 const Solution = require('../models/solution');
-
-// View list of problems
-router.get('/', async (req, res) => {
-    let responses = [];
-
-    let problems = await Problem.find().sort({ dateIn: 'desc' }).exec().then(docs => {
-        return JSON.parse(JSON.stringify(docs));
-    }).catch(error => {
-        return error;
-    });
-
-    for (let index = 0; index < problems.length; index++) {
-        const problem = problems[index];
-        let date = new Date(problem.dateIn);
-        let response = {};
-        let totalUnits = 0;
-        let totalCost = 0;
-
-        problem.supply.forEach(sup => {
-            totalUnits += sup;
-        });
-
-        const solutions = await Solution.findById(problem._id).exec().then(doc => {
-            return JSON.parse(JSON.stringify(doc.solution));
-        }).catch(error => {
-            return null;
-            // return error;
-        });
-
-        if (solutions !== null) {
-            for (let x = 0; x < solutions[solutions.length - 1].distribution.length; x++) {
-                for (let y = 0; y < solutions[solutions.length - 1].distribution[x].length; y++) {
-                    totalCost += (problem.cost[x][y] * solutions[solutions.length - 1].distribution[x][y]);
-                }
-            }
-        }
-
-        response.id = problem._id;
-        response.date = date.toLocaleString('id-ID');
-        response.suppliers = problem.supply.length;
-        response.demanders = problem.demand.length;
-        response.totalUnits = totalUnits;
-        response.totalCost = totalCost;
-
-        responses.push(response);
-    }
-
-    res.render(`view`, { problems: responses });
-});
 
 // View Problem
 router.get('/problem/:problemId', async (req, res) => {
