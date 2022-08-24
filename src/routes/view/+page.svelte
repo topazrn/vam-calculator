@@ -1,8 +1,11 @@
 <script lang="ts">
-  import { DB } from '$lib/Database';
+  import { DB } from "$lib/Database";
   import { browser } from "$app/env";
+  import ProblemViewer from "$lib/ProblemViewer.svelte";
 
   let problems_promise = browser ? DB.problems.toArray() : [];
+  let viewProblem = 0;
+  let viewSolution = 0;
 
   function sum(list: number[]) {
     let sum = 0;
@@ -11,8 +14,6 @@
     }
     return sum;
   }
-  function viewProblem(id: number) {}
-  function viewSolution(id: number) {}
 </script>
 
 <div class="columns">
@@ -34,8 +35,10 @@
               <td>{problem.demand.length}</td>
               <td>{sum(problem.supply)}</td>
               <td>
-                <button class="button is-danger" on:click={() => { viewProblem(problem.id ?? 0) }}>View Problem</button>
-                <button class="button is-success" on:click={() => { viewSolution(problem.id ?? 0) }}>View Solution</button>
+                <!-- prettier-ignore -->
+                <button class="button is-danger" on:click={() => { viewProblem = problem.id ?? 0 }}>View Problem</button>
+                <!-- prettier-ignore -->
+                <button class="button is-success" on:click={() => { viewSolution = problem.id ?? 0 }}>View Solution</button>
               </td>
             </tr>
           {/each}
@@ -44,39 +47,7 @@
     </table>
   </div>
 </div>
-<div id="problem-modal" class="modal">
-  <div class="modal-background" />
-  <div class="modal-content" style="width: unset;">
-    <div class="box">
-      <article class="media">
-        <div class="media-content">
-          <div class="content">
-            <table id="problem" class="table is-bordered is-striped is-hoverable">
-              <tbody>
-                <tr>
-                  <th style="visibility:hidden" />
-                  <th>D<sub>1</sub></th>
-                  <th>Supply</th>
-                </tr>
-                <tr>
-                  <th>S<sub>1</sub></th>
-                  <td />
-                  <th />
-                </tr>
-                <tr>
-                  <th>Demand</th>
-                  <th />
-                  <th />
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </article>
-    </div>
-  </div>
-  <button class="modal-close is-large" aria-label="close" />
-</div>
+<ProblemViewer bind:id={viewProblem} />
 <div id="solution-modal" class="modal">
   <div class="modal-background" />
   <div class="modal-content" style="width: unset;">
