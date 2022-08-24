@@ -1,9 +1,9 @@
 <script lang="ts">
-  import { DB } from "$lib/Database";
-  import { browser } from "$app/env";
+  import type { Problem } from "$lib/Database";
+
   import ProblemViewer from "$lib/ProblemViewer.svelte";
 
-  let problems_promise = browser ? DB.problems.toArray() : [];
+  export let data: { problems: Problem[] };
   let viewProblem = 0;
   let viewSolution = 0;
 
@@ -27,22 +27,20 @@
           <th>Total Units</th>
           <th>Action</th>
         </tr>
-        {#await problems_promise then problems}
-          {#each problems as problem}
-            <tr data-id={problem.id}>
-              <td>{new Date(problem.dateIn)}</td>
-              <td>{problem.supply.length}</td>
-              <td>{problem.demand.length}</td>
-              <td>{sum(problem.supply)}</td>
-              <td>
-                <!-- prettier-ignore -->
-                <button class="button is-danger" on:click={() => { viewProblem = problem.id ?? 0 }}>View Problem</button>
-                <!-- prettier-ignore -->
-                <button class="button is-success" on:click={() => { viewSolution = problem.id ?? 0 }}>View Solution</button>
-              </td>
-            </tr>
-          {/each}
-        {/await}
+        {#each data.problems as problem}
+          <tr data-id={problem.id}>
+            <td>{new Date(problem.dateIn)}</td>
+            <td>{problem.supply.length}</td>
+            <td>{problem.demand.length}</td>
+            <td>{sum(problem.supply)}</td>
+            <td>
+              <!-- prettier-ignore -->
+              <button class="button is-danger" on:click={() => { viewProblem = problem.id ?? 0 }}>View Problem</button>
+              <!-- prettier-ignore -->
+              <button class="button is-success" on:click={() => { viewSolution = problem.id ?? 0 }}>View Solution</button>
+            </td>
+          </tr>
+        {/each}
       </tbody>
     </table>
   </div>
