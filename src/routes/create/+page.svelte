@@ -51,7 +51,6 @@
       cost: [[0]]
     };
     totalUnits = 0;
-    alert = '';
   }
   function submitted() {
     let request = new XMLHttpRequest();
@@ -110,9 +109,7 @@
     </table>
   </div>
 </div>
-{#if alert !== ''}
-  <Alert bind:message={alert} />
-{/if}
+<Alert bind:message={alert} />
 
 <style>
   table {

@@ -1,10 +1,10 @@
 <script lang="ts">
   export let message: string;
-  let active = true;
+  $: active = message !== '';
 
   function hide() {
     active = false;
-    message = "";
+    message = '';
   }
 </script>
 
