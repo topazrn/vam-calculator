@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { vam } from "vogels-approximation-method";
+  import { vam, type Step } from "vogels-approximation-method";
 
   import type { PageData } from "./$types";
 
@@ -13,9 +13,26 @@
     return sum;
   }
 
-  const solution = vam(data.problem);
-  console.log(solution);
-  
+  const solution: Step[] = [
+    {
+      matrix: Array(data.problem.matrix.length).fill(Array(data.problem.matrix[0].length).fill(0)),
+      x: data.problem.x,
+      y: data.problem.y,
+      penalty: {
+        x: Array(data.problem.matrix[0].length).fill(0),
+        y: Array(data.problem.matrix.length).fill(0),
+      },
+      strike: {
+        x: [],
+        y: [],
+      },
+      calculation1: "",
+      calculation2: "",
+      total: 0,
+    },
+  ];
+  solution.push(...vam(data.problem));
+
   let stepIndex = 0;
 
   $: next_enabled = stepIndex < solution.length - 1;
@@ -48,7 +65,12 @@
                   <tr>
                     <th>S<sub>{y + 1}</sub></th>
                     {#each solution[stepIndex].x as _x, x}
-                      <td>{data.problem.matrix[y][x]}/{solution[stepIndex].matrix[y][x]}</td>
+                      <td>
+                        <div class="tags has-addons">
+                          <span class="tag">{data.problem.matrix[y][x]}</span>
+                          <span class="tag is-primary">{solution[stepIndex].matrix[y][x]}</span>
+                        </div>
+                      </td>
                     {/each}
                     <th>{_y}</th>
                   </tr>
@@ -63,10 +85,14 @@
               </tbody>
             </table>
             <p style="word-break: break-all;">
-              Total = {solution[stepIndex].calculation1} <br>
-              Total = {solution[stepIndex].calculation2} <br>
-              {#if solution[stepIndex].calculation2.indexOf(" ") != -1}
-                Total = {solution[stepIndex].total} <br>
+              {#if solution[stepIndex].total === 0}
+                Total = 0
+              {:else}
+                Total = {solution[stepIndex].calculation1} <br />
+                Total = {solution[stepIndex].calculation2} <br />
+                {#if solution[stepIndex].calculation2.indexOf(" ") != -1}
+                  Total = {solution[stepIndex].total} <br />
+                {/if}
               {/if}
             </p>
           </div>
