@@ -26,9 +26,9 @@
         {#each data.problems as problem}
           <tr data-id={problem.id}>
             <td>{new Date(problem.dateIn)}</td>
-            <td>{problem.supply.length}</td>
-            <td>{problem.demand.length}</td>
-            <td>{sum(problem.supply)}</td>
+            <td>{problem.y.length}</td>
+            <td>{problem.x.length}</td>
+            <td>{sum(problem.y)}</td>
             <td>
               <a href="/view/{problem.id}" class="button is-success">View Solution</a>
             </td>
@@ -39,27 +39,6 @@
   </div>
 </div>
 <slot />
-
-<!-- <div id="solution-modal" class="modal">
-  <div class="modal-background" />
-  <div class="modal-content" style="width: unset;">
-    <div class="box">
-      <article class="media">
-        <div class="media-content">
-          <div class="columns">
-            <div class="column buttons" style="text-align: center;">
-              <button id="previous" class="button is-light" onclick="solutionViewer.previous()">Previous Step</button>
-              <button id="next" class="button is-light" onclick="solutionViewer.next()">Next Step</button>
-            </div>
-          </div>
-          <div id="solutions" class="content" />
-          <div id="total" />
-        </div>
-      </article>
-    </div>
-  </div>
-  <button class="modal-close is-large" aria-label="close" />
-</div> -->
 <style>
   table * {
     text-align: center !important;

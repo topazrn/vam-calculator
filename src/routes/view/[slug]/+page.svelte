@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { vam } from "vogels-approximation-method";
+
   import type { PageData } from "./$types";
 
   export let data: PageData;
@@ -10,6 +12,14 @@
     }
     return sum;
   }
+
+  const solution = vam(data.problem);
+  console.log(solution);
+  
+  let stepIndex = 0;
+
+  $: next_enabled = stepIndex < solution.length - 1;
+  $: previous_enabled = stepIndex > 0;
 </script>
 
 <div class="modal is-active">
@@ -19,35 +29,46 @@
       <article class="media">
         <div class="media-content">
           <div class="content">
-            {#if data.problem != undefined}
-              <table class="table is-bordered is-striped is-hoverable">
-                <tbody>
-                  <tr>
-                    <th style="visibility:hidden" />
-                    {#each data.problem.demand as _demand, d}
-                      <th>D<sub>{d + 1}</sub></th>
-                    {/each}
-                    <th>Supply</th>
-                  </tr>
-                  {#each data.problem.supply as _supply, s}
-                    <tr>
-                      <th>S<sub>{s + 1}</sub></th>
-                      {#each data.problem.demand as _demand, d}
-                        <td>{data.problem.cost[s][d]}</td>
-                      {/each}
-                      <th>{_supply}</th>
-                    </tr>
+            <div class="columns">
+              <div class="column buttons" style="text-align: center;">
+                <button id="previous" class="button is-light" on:click={() => stepIndex--} disabled={!previous_enabled}>Previous Step</button>
+                <button id="next" class="button is-light" on:click={() => stepIndex++} disabled={!next_enabled}>Next Step</button>
+              </div>
+            </div>
+            <table class="table is-bordered is-striped is-hoverable">
+              <tbody>
+                <tr>
+                  <th style="visibility:hidden" />
+                  {#each solution[stepIndex].x as _x, x}
+                    <th>D<sub>{x + 1}</sub></th>
                   {/each}
+                  <th>Supply</th>
+                </tr>
+                {#each solution[stepIndex].y as _y, y}
                   <tr>
-                    <th>Demand</th>
-                    {#each data.problem.demand as _demand}
-                      <th>{_demand}</th>
+                    <th>S<sub>{y + 1}</sub></th>
+                    {#each solution[stepIndex].x as _x, x}
+                      <td>{data.problem.matrix[y][x]}/{solution[stepIndex].matrix[y][x]}</td>
                     {/each}
-                    <th>{sum(data.problem.demand)}</th>
+                    <th>{_y}</th>
                   </tr>
-                </tbody>
-              </table>
-            {/if}
+                {/each}
+                <tr>
+                  <th>Demand</th>
+                  {#each solution[stepIndex].x as _x}
+                    <th>{_x}</th>
+                  {/each}
+                  <th>{sum(solution[stepIndex].x)}</th>
+                </tr>
+              </tbody>
+            </table>
+            <p style="word-break: break-all;">
+              Total = {solution[stepIndex].calculation1} <br>
+              Total = {solution[stepIndex].calculation2} <br>
+              {#if solution[stepIndex].calculation2.indexOf(" ") != -1}
+                Total = {solution[stepIndex].total} <br>
+              {/if}
+            </p>
           </div>
         </div>
       </article>
@@ -55,3 +76,11 @@
   </div>
   <a href="/view" class="modal-close is-large" aria-label="close">&nbsp;</a>
 </div>
+
+<style>
+  table * {
+    text-align: center !important;
+    white-space: nowrap !important;
+    vertical-align: middle !important;
+  }
+</style>

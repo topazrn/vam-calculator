@@ -1,55 +1,57 @@
 <script lang="ts">
-  import Alert from '$lib/Alert.svelte';
-  import { DB } from '$lib/Database';
+  import Alert from "$lib/Alert.svelte";
+  import { DB, type Problem } from "$lib/Database";
+  import type { Problem as IProblem } from "vogels-approximation-method";
 
-  let data = {
-    supply: [0],
-    demand: [0],
-    cost: [[0]]
+  let data: IProblem = {
+    y: [0],
+    x: [0],
+    matrix: [[0]],
   };
   let totalUnits = 0;
-  let alert = '';
-  $: submittable = !data
+  let alert = "";
+  $: submittable = totalUnits != 0;
 
   function addDemand() {
-    data.demand.push(0);
-    data.cost.forEach((demand) => demand.push(0));
+    data.x.push(0);
+    data.matrix.forEach((x) => x.push(0));
     data = data;
   }
   function addSupply() {
-    data.supply.push(0);
-    data.cost.push(new Array(data.supply.length).fill(0));
+    data.y.push(0);
+    data.matrix.push(new Array(data.y.length).fill(0));
     data = data;
   }
   function calculateTotalUnits() {
     let totalDemand = 0;
-    data.demand.forEach((d) => (totalDemand += d));
+    data.x.forEach((x) => (totalDemand += x));
     let totalSupply = 0;
-    data.supply.forEach((s) => (totalSupply += s));
+    data.y.forEach((y) => (totalSupply += y));
     if (totalDemand === totalSupply) {
       totalUnits = totalDemand;
-      submittable = true;
     } else {
-      alert = 'Demands and supplies total units must be equal';
+      totalUnits = 0;
+      alert = "Demands and supplies total units must be equal";
     }
   }
   function reset() {
     data = {
-      supply: [0],
-      demand: [0],
-      cost: [[0]]
+      y: [0],
+      x: [0],
+      matrix: [[0]],
     };
     totalUnits = 0;
   }
   async function submit() {
     try {
-      await DB.problems.add({
+      const problem: Problem = {
         ...data,
-        dateIn: Date.now()
-      });
-      alert = 'Problem has been successfully added';
+        dateIn: Date.now(),
+      }
+      await DB.problems.add(problem);
+      alert = "Problem has been successfully added";
     } catch (error) {
-      alert = 'Error adding problem';
+      alert = "Error adding problem";
     }
   }
 </script>
@@ -69,24 +71,24 @@
       <tbody>
         <tr>
           <th style="visibility:hidden" />
-          {#each data.demand as _demand, d}
-            <th>D<sub>{d + 1}</sub></th>
+          {#each data.x as _x, x}
+            <th>D<sub>{x + 1}</sub></th>
           {/each}
           <th>Supply</th>
         </tr>
-        {#each data.supply as _supply, s}
+        {#each data.y as _y, y}
           <tr>
-            <th>S<sub>{s + 1}</sub></th>
-            {#each data.demand as _demand, d}
-              <td><input bind:value={data.cost[s][d]} class="input" type="number" /></td>
+            <th>S<sub>{y + 1}</sub></th>
+            {#each data.x as _x, x}
+              <td><input bind:value={data.matrix[y][x]} class="input" type="number" /></td>
             {/each}
-            <th><input bind:value={_supply} class="input" type="number" /></th>
+            <th><input bind:value={_y} class="input" type="number" /></th>
           </tr>
         {/each}
         <tr>
           <th>Demand</th>
-          {#each data.demand as _demand}
-            <th><input bind:value={_demand} class="input" type="number" /></th>
+          {#each data.x as _x}
+            <th><input bind:value={_x} class="input" type="number" /></th>
           {/each}
           <th><input bind:value={totalUnits} class="input" type="number" disabled /></th>
         </tr>

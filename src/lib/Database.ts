@@ -1,21 +1,18 @@
-import Dexie from 'dexie';
-import type { Table } from 'dexie';
+import { Dexie, type Table } from "dexie";
+import type { Problem as IProblem } from "vogels-approximation-method";
 
-export interface Problem {
+export interface Problem extends IProblem {
   id?: number;
-  supply: number[],
-  demand: number[],
-  cost: number[][],
-  dateIn: number,
+  dateIn: number;
 }
 
 export class Database extends Dexie {
   problems!: Table<Problem>;
 
   constructor() {
-    super('dexie');
+    super("dexie");
     this.version(1).stores({
-      problems: '++id, dateIn' // Primary key and indexed props
+      problems: "++id, dateIn", // Primary key and indexed props
     });
   }
 }
