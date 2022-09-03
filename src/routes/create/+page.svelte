@@ -8,9 +8,9 @@
     x: [0],
     matrix: [[0]],
   };
-  let totalUnits = 0;
+  $: totalUnits = "0";
   let alert = "";
-  $: submittable = totalUnits != 0;
+  $: submittable = totalUnits.indexOf("/") === -1 && totalUnits !== "0";
 
   function addDemand() {
     data.x.push(0);
@@ -28,10 +28,9 @@
     let totalSupply = 0;
     data.y.forEach((y) => (totalSupply += y));
     if (totalDemand === totalSupply) {
-      totalUnits = totalDemand;
+      totalUnits = totalDemand.toString();
     } else {
-      totalUnits = 0;
-      alert = "Demands and supplies total units must be equal";
+      totalUnits = totalDemand + " / " + totalSupply;
     }
   }
   function reset() {
@@ -40,7 +39,7 @@
       x: [0],
       matrix: [[0]],
     };
-    totalUnits = 0;
+    totalUnits = "0";
   }
   async function submit() {
     try {
@@ -61,7 +60,6 @@
     <button class="button is-danger" on:click={reset}>Reset</button>
     <button class="button is-light" on:click={() => addDemand()}>Add Demand</button>
     <button class="button is-light" on:click={() => addSupply()}>Add Supply</button>
-    <button class="button is-primary" on:click={() => calculateTotalUnits()}>Calculate Total Units</button>
     <button class="button is-link" on:click={async () => await submit()} disabled={!submittable}>Submit</button>
   </div>
 </div>
@@ -80,17 +78,17 @@
           <tr>
             <th>S<sub>{y + 1}</sub></th>
             {#each data.x as _x, x}
-              <td><input bind:value={data.matrix[y][x]} class="input" type="number" /></td>
+              <td><input bind:value={data.matrix[y][x]} on:change={calculateTotalUnits} class="input" type="number" /></td>
             {/each}
-            <th><input bind:value={_y} class="input" type="number" /></th>
+            <th><input bind:value={_y} on:change={calculateTotalUnits} class="input" type="number" /></th>
           </tr>
         {/each}
         <tr>
           <th>Demand</th>
           {#each data.x as _x}
-            <th><input bind:value={_x} class="input" type="number" /></th>
+            <th><input bind:value={_x} on:change={calculateTotalUnits} class="input" type="number" /></th>
           {/each}
-          <th><input bind:value={totalUnits} class="input" type="number" disabled /></th>
+          <th><input bind:value={totalUnits} class="input" type="text" disabled /></th>
         </tr>
       </tbody>
     </table>
