@@ -82,6 +82,16 @@
                   {/each}
                   <th>{sum(solution[stepIndex].x)}</th>
                 </tr>
+                {#each solution as _step, step}
+                  {#if step < stepIndex + 1 && step != 0}
+                    <tr>
+                      <th>P<sub>{step + 1}</sub></th>
+                      {#each _step.penalty.x as _x}
+                        <td>{_x}</td>
+                      {/each}
+                    </tr>
+                  {/if}
+                {/each}
               </tbody>
             </table>
             <p style="word-break: break-all;">
