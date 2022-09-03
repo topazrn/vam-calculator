@@ -1,4 +1,23 @@
 <script>
+  // Import the functions you need from the SDKs you need
+  import { initializeApp } from "firebase/app";
+  // TODO: Add SDKs for Firebase products that you want to use
+  // https://firebase.google.com/docs/web/setup#available-libraries
+
+  // Your web app's Firebase configuration
+  const firebaseConfig = {
+    apiKey: "AIzaSyC_kE3UoloLyP4MUor3ujZtJiZN85kWaPI",
+    authDomain: "dim-vam.firebaseapp.com",
+    databaseURL: "https://dim-vam.firebaseio.com",
+    projectId: "dim-vam",
+    storageBucket: "dim-vam.appspot.com",
+    messagingSenderId: "1046417931197",
+    appId: "1:1046417931197:web:585e600a3935365e3eb0d4",
+  };
+
+  // Initialize Firebase
+  initializeApp(firebaseConfig);
+
   let active = false;
 
   function toggle() {
