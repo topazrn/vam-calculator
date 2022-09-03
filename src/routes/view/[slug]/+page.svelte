@@ -60,6 +60,11 @@
                     <th>D<sub>{x + 1}</sub></th>
                   {/each}
                   <th>Supply</th>
+                  {#each solution as _step, step}
+                    {#if step != 0 && step < stepIndex + 1 }
+                      <th>P<sub>{step + 1}</sub></th>
+                    {/if}
+                  {/each}
                 </tr>
                 {#each solution[stepIndex].y as _y, y}
                   <tr>
@@ -73,6 +78,11 @@
                       </td>
                     {/each}
                     <th>{_y}</th>
+                    {#each solution as _step, step}
+                      {#if step != 0 && step < stepIndex + 1 }
+                        <td>{_step.penalty.y[y]}</td>
+                      {/if}
+                    {/each}
                   </tr>
                 {/each}
                 <tr>
@@ -83,7 +93,7 @@
                   <th>{sum(solution[stepIndex].x)}</th>
                 </tr>
                 {#each solution as _step, step}
-                  {#if step < stepIndex + 1 && step != 0}
+                  {#if step != 0 && step < stepIndex + 1 }
                     <tr>
                       <th>P<sub>{step + 1}</sub></th>
                       {#each _step.penalty.x as _x}
