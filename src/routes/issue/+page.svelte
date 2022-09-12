@@ -1,12 +1,13 @@
-<script>
-  (function () {
+<script lang="ts">
+  import { onMount } from "svelte";
+
+  onMount(() => {
     // DON'T EDIT BELOW THIS LINE
-    var d = document,
-      s = d.createElement("script");
-    s.src = "https://dim-vam.disqus.com/embed.js";
-    s.setAttribute("data-timestamp", new Date().toString());
-    (d.head || d.body).appendChild(s);
-  })();
+    let script = window.document.createElement("script");
+    script.src = "https://dim-vam.disqus.com/embed.js";
+    script.setAttribute("data-timestamp", new Date().getTime().toString());
+    (window.document.head || window.document.body).appendChild(script);
+  });
 </script>
 
 <h1 class="is-size-2">Report an issue</h1>
