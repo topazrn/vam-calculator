@@ -41,12 +41,53 @@
     };
     totalUnits = "0";
   }
+  function random() {
+    let totaly = Math.floor(Math.random() * 1000) + 1000;
+    let totalx = totaly;
+    totalUnits = totaly.toString();
+    let county = Math.floor(Math.random() * 9) + 1;
+    let countx = Math.floor(Math.random() * 9) + 1;
+    let y: number[] = [];
+    let x: number[] = [];
+    for (let index = 0; index < county && totaly > 0; index++) {
+      if (index === county - 1) {
+        y.push(totaly);
+        console.log({totaly, county, value:totaly, index });
+      } else {
+        let value = Math.floor(Math.random() * totaly);
+        console.log({totaly, county, value, index });
+        totaly -= value;
+        y.push(value);
+      }
+    }
+    for (let index = 0; index < countx && totalx > 0; index++) {
+      if (index === countx - 1) {
+        x.push(totalx);
+      } else {
+        let value = Math.floor(Math.random() * totalx);
+        totalx -= value;
+        x.push(value);
+      }
+    }
+    let matrix: number[][] = [];
+    for (let _y = 0; _y < county; _y++) {
+      matrix.push([]);
+      for (let _x = 0; _x < countx; _x++) {
+        matrix[_y].push(Math.floor(Math.random() * 100));
+      }
+    }
+    data = {
+      y,
+      x,
+      matrix,
+    };
+  }
   async function submit() {
     try {
       const problem: Problem = {
         ...data,
         dateIn: Date.now(),
-      }
+      };
       await DB.problems.add(problem);
       alert = "Problem has been successfully added";
     } catch (error) {
@@ -58,6 +99,7 @@
 <div class="columns">
   <div class="column buttons" style="text-align: center;">
     <button class="button is-danger" on:click={reset}>Reset</button>
+    <button class="button is-warning" on:click={random}>Random</button>
     <button class="button is-light" on:click={() => addDemand()}>Add Demand</button>
     <button class="button is-light" on:click={() => addSupply()}>Add Supply</button>
     <button class="button is-link" on:click={async () => await submit()} disabled={!submittable}>Submit</button>
